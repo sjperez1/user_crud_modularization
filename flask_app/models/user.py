@@ -1,3 +1,4 @@
+from flask_app import DATABASE
 from flask_app.config.mysqlconnection import connectToMySQL
 
 class User:
@@ -13,7 +14,7 @@ class User:
     def get_all(cls):
         query = "SELECT * "
         query += "FROM users;"
-        results = connectToMySQL('users_schema').query_db(query)
+        results = connectToMySQL(DATABASE).query_db(query)
 
         users = []
 
@@ -26,8 +27,9 @@ class User:
     def create(cls, data):
         query = "INSERT INTO users(first_name, last_name, email) "
         query += "VALUES( %(first_name)s, %(last_name)s, %(email)s);"
-
-        new_user = connectToMySQL('users_schema').query_db(query, data)
+        # create queries return the id of the user
+        new_user = connectToMySQL(DATABASE).query_db(query, data)
+        print(new_user)
         return new_user
 
     @classmethod
@@ -35,10 +37,14 @@ class User:
         query = "SELECT * "
         query += "FROM users "
         query += "WHERE id = %(id)s;"
-        result = connectToMySQL('users_schema').query_db(query, data)
+        # Put the following in result so that the first entry can later be selected. The query, which comes back as a list of dictionaries, will be stored in a variable that I am calling result. One item in the list will be a dictionary. Use print statements to visualize.
+        result = connectToMySQL(DATABASE).query_db(query, data)
         print(result)
-        # Need result[0] because result is a list of dictionaries and I want to look at the first thing in the result dictionary to get the id. Found this out by printing result and refreshing page and looking at the list in my terminal.
+        # Need result[0] because result is a list of dictionaries and I want to look at the first dictionary in the result list to to get the user with that id. Found this out by printing result and refreshing page and looking at the list in my terminal.
+        # This line: one_user = cls(result[0])   is creating an instance of a user. one_user is like the variable name for this user that I can use in other files that use this classmethod (such as in show.html, edit.html, and users.py when calling this funtion). cls is like saying the class name User and the result[0] in parentheses has all of the info that each user will have, as specified at the top of this file in def __init__(self, data). Use print to visualize one_user. Return the instance of the class at the end.
+        # When you make a query, the database knows its a user, but these python files do not know that it is user, which is why an instance of a user still has to be made after the query.
         one_user = cls(result[0])
+        print(one_user)
         return one_user
 
     @classmethod
@@ -46,10 +52,12 @@ class User:
         query = "UPDATE users "
         query += "SET first_name = %(first_name)s, last_name = %(last_name)s, email = %(email)s "
         query += "WHERE id = %(id)s;" 
-        return connectToMySQL('users_schema').query_db(query, data)
+        return connectToMySQL(DATABASE).query_db(query, data)
+        # Update queries return None, which is why the return is just the query and no addition steps after like in def get_user().
 
     @classmethod
     def delete(cls, data):
         query = "DELETE FROM users "
         query += "WHERE id = %(id)s;"
-        return connectToMySQL('users_schema').query_db(query, data)
+        return connectToMySQL(DATABASE).query_db(query, data)
+        # # Delete queries return None, which is why the return is just the query and no addition steps after like in def get_user().
