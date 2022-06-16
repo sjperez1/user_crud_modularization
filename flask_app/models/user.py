@@ -17,7 +17,7 @@ class User:
         results = connectToMySQL(DATABASE).query_db(query)
 
         users = []
-
+        # Since we are doing a query and then wanting to display it on the web page, we have to make instances of each user in the table (this is done by looping through each dictionary in the list(which is equal to one row in each ) and creating an instance of a user (which is cls(user))) and then put it in something to hold it, like the users array
         for user in results:
             users.append(cls(user))
         return users
@@ -26,11 +26,10 @@ class User:
     # Data is holding a dictionary of things that come from our form. The insert into in parentheses has names matching the columns in database and values names need to match the keys in the dictionaries that you are giving the values for
     def create(cls, data):
         query = "INSERT INTO users(first_name, last_name, email) "
+        # The blue names are taking in the data from the data dictionary in the 
         query += "VALUES( %(first_name)s, %(last_name)s, %(email)s);"
-        # create queries return the id of the user
-        new_user = connectToMySQL(DATABASE).query_db(query, data)
-        print(new_user)
-        return new_user
+        # create queries return the id of the user to the controller and we do not have to store it in a varible because we are not showing it back on our page right away, it is just getting stored in the database. Due to this, we just have it redirect to somewhere in our controller.
+        return connectToMySQL(DATABASE).query_db(query, data)
 
     @classmethod
     def get_user(cls, data):

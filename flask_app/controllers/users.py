@@ -6,9 +6,15 @@ from flask_app.models.user import User
 
 @app.route("/")
 def show_users():
-    # call the get all classmethod to get all users
-    users = User.get_all()
-    return render_template("read_all.html", users = users)
+    # When you get an error look at: front end, controller, model
+    # controller to route
+    """ call the get all classmethod to get all users by doing the variable name equals the function called: users = User.get_all(), which basically means that the variable will be equal to whatever the function is returning. Then, it would need to be placed in the render_template parentheses as something like: return render_template("read_all.html", users = users). You have to include it here too because this is what you are sending to the front end in these parentheses and you are wanting to show all of the users, which is data obtain from the query in the model, on the front end.
+
+    OR  to make it even shorter, just put the variable name that you want to use in the html equal to the function you are calling because this will make the variable equal to whatever the function is returning.
+    """
+    # users = User.get_all()        No longer needed bc put next to render template.
+    # The part on the left of the equals sign is used in the html.
+    return render_template("read_all.html", users = User.get_all())
 
 @app.route("/user/new")
 def display_create_user():
@@ -16,6 +22,7 @@ def display_create_user():
 
 @app.route("/user/new", methods = ['POST'])
 def create_user():
+    # Need to put a data dictionary here with info that you need to pass into your models for a model query. Class methods like create, get_user, edit, delete.
     data = {
         "first_name" : request.form["first_name"],
         "last_name" : request.form["last_name"],
