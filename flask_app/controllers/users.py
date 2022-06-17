@@ -65,5 +65,5 @@ def delete_user(id):
     data = {
         "id" : id
     }
-    User.delete(data)
+    User.delete_one(data)
     return redirect("/")

@@ -55,8 +55,28 @@ class User:
         # Update queries return None, which is why the return is just the query and no addition steps after like in def get_user().
 
     @classmethod
-    def delete(cls, data):
+    def delete_one(cls, data):
         query = "DELETE FROM users "
         query += "WHERE id = %(id)s;"
         return connectToMySQL(DATABASE).query_db(query, data)
         # # Delete queries return None, which is why the return is just the query and no addition steps after like in def get_user().
+
+
+
+"""
+How to name functions based on what you doing in the database:
+
+SELECT:
+def get_all()
+def get_one()
+
+INSERT:
+def create()
+
+DELETE:
+def delete_one()
+
+UPDATE:
+def update_one()
+def edit_one()
+"""
